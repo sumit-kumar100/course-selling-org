@@ -1,5 +1,5 @@
 # Course_Website
-This is a course website
+This is a course selling website
 
 1. In this website you can add courses and sell it online.
 2. There is no payment gateway implemented here you have to implement on your own side.  # Payment has been bypassed.
