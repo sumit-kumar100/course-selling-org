@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if messages %}
+{% for message in messages %}
+{% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+<div class="alert alert-danger p-2 text-center">
+    {{ message }}
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if password_request %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 border rounded shadow">
+            <br>
+            <span>
+                <a href="/my-profile/" class="text-decoration-none p-2 alert-dark text-dark border m-0 rounded-3 ">general</a>
+            </span>
+            <span>
+                <a href="?edit=password"  class="text-decoration-none p-2 alert-dark text-dark border m-0 rounded-3">password</a>
+            </span>
+            <div class="text-center">
+                <br>
+                <span><i class="fas fa-user display-1 alert-dark p-4 rounded-circle"></i></span>
+            </div>
+            <form action="/my-profile/edit-my-profile/edit=password/" method="POST" class="form-group p-3 m-5 ">
+                {% csrf_token %}
+                <div>
+                    <input type="password" class="form-control mb-4" name="last_password" placeholder="last password" required>
+                </div>
+                {% if messages %}
+                {% for message in messages %}
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                <div class="alert alert-danger p-2 text-center">
+                    {{ message }}
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+                <div>
+                    <input type="password" class="form-control mb-4" name="new_password" placeholder="new password" required>
+                </div>
+                <div>
+                    <input type="password" class="form-control mb-4" name="confirm_new_password" placeholder="Confirn new password" required>
+                </div>
+                {% if messages %}
+                {% for message in messages %}
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+                <div class="alert alert-danger p-2 text-center">
+                    {{ message }}
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+                <div class="justify-content-center d-flex">
+                    <input type="submit" class="btn btn-dark" value="update profile">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 border rounded shadow">
+            <br>
+            <span>
+                <a href="/my-profile/" class="text-decoration-none p-2 alert-dark text-dark border m-0 rounded-3 ">general</a>
+            </span>
+            <span>
+                <a href="?edit=password"  class="text-decoration-none p-2 alert-dark text-dark border m-0 rounded-3">password</a>
+            </span>
+            <div class="text-center">
+                <br>
+                <span><i class="fas fa-user display-1 alert-dark p-4 rounded-circle"></i></span>
+            </div>
+            <form action="/my-profile/edit-my-profile/" method="POST" class="form-group p-3 m-5 mb-0">
+                {% csrf_token %}
+                <div>
+                    <input type="text" class="form-control mb-4" name="first_name" placeholder="first-name"
+                        value="{{ customer_data.first_name }}" required>
+                </div>
+                <div>
+                    <input type="text" class="form-control mb-4" name="last_name" placeholder="last-name"
+                        value="{{ customer_data.last_name }}" required>
+                </div>
+                <div>
+                    <input type="email" class="form-control mb-4" name="mail" placeholder="email"
+                        value="{{ customer_data.mail }}" required>
+                </div>
+                <div>
+                    <input type="number" class="form-control mb-4" name="phone_number" value="{{ customer_data.phone }}"
+                        placeholder="Enter mobile number" required>
+                </div>
+                {% if messages %}
+                {% for message in messages %}
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                <div class="alert alert-danger p-2 text-center">
+                    {{ message }}
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
+                <div>
+                    <input type="number" class="form-control mb-4" name="id" hidden value="{{ customer_data.id }}"
+                        required>
+                </div>
+                <div class="justify-content-center d-flex">
+                    <input type="submit" class="btn btn-dark" value="update profile">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

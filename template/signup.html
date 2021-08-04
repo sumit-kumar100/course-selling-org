@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+<div class="container bg-white p-3 shadow-lg">
+    <div class="row">
+        <div class="col-12 col-md-6 d-none d-md-block">
+            <div class="dummy-image">
+                <img src="https://i.pinimg.com/564x/bc/3e/b2/bc3eb2b0b70689ddf5d43b963d52d5a2.jpg" class="img-fluid"
+                    style="height:500px; width:350px; border-radius:15px; float:right;">
+            </div>
+        </div>
+        <div class="col-12 col-md-5 p-0 ps-5 pe-5">
+            <h1 class="font-weight-bold text-center p-4 m-4 mb-0">Signup</h1>
+            <form class="form-group" action="/signup_user/" method="POST">
+                {% csrf_token %}
+                <br><br>
+                <div>
+                    <div>
+                        <input type="firstname" name="first_name" required placeholder="firstname"
+                            class="form-control mb-3" required>
+                    </div>
+                    <div>
+                        <input type="lastname" name="last_name" required placeholder="lastname"
+                            class="form-control mb-3" required>
+                    </div>
+                    <div>
+                        <div>
+                            <input type="email" name="mail" placeholder="mail-Address" required
+                                class="form-control mb-3" required>
+                        </div>
+                        {% if messages %}
+                        {% for message in messages %}
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                        <div class="alert alert-danger p-2 text-center">
+                            {{ message }}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
+                        <div>
+                            <input type="password" name="password" required placeholder="*****"
+                                class="form-control mb-3" required>
+                        </div>
+                        {% if messages %}
+                        {% for message in messages %}
+                        {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+                        <div class="alert alert-info p-2 text-center">
+                            {{ message }}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
+                        <div>
+                            <input type="submit" class="btn btn-dark text-white bg-gradient form-control mb-3 d-block">
+                        </div>
+                    </div>
+                    <p class="text-center">Already have Account ? <a href="/login/" class="text-decoration-none">Login</a>
+                    </p>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    ul li:hover {
+        background-color: rgb(224, 229, 231);
+    }
+</style>
+{% load custom_filter %}
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-lg-7 ">
+            <div class="ratio ratio-16x9 img-thumbnail">
+                <iframe src="https://www.youtube.com/embed/{{ requested_video.video_url }}" title="YouTube video"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
+            <br>
+        </div>
+
+        <div class="col-12 col-lg-5  p-0">
+            <div class="ratio ratio-4x3 overflow-auto">
+                <ul class="p-4 list-unstyled">
+                    {% for v in courses.video_set.all %}
+                    <a href="?episode={{ v.serial_no }}" class="text-decoration-none text-dark" 
+                    {% if is_customer_course is False %}{% if not v.is_preview %} style="cursor:not-allowed;" {% endif %}{% endif %}>
+                        <li class="m-1 d-flex p-1 pt-2">
+                            <p class="{% if not v.is_preview %} text-muted {% endif %}">{{ v.serial_no }}</p>
+                            &nbsp;&nbsp;&nbsp;
+                            <div>
+                                <img src="{{ v.video_img }}" style="height:68px; width:113px;" alt="">
+                            </div>
+                            <p class="p-2 {% if is_customer_course is False %} {% if not v.is_preview %} text-muted fs-7 {% endif %}{% endif %}"
+                                style="font-size:12px;">{{ v.video_title | truncate }} &nbsp;&nbsp;
+                                {% if is_customer_course is False %}{% if not v.is_preview %}
+                                <span class="badge bg-success fw-light">
+                                    paid
+                                </span> 
+                                {% endif %}{% endif %}
+                            </p>
+                        </li>
+                    </a>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-4 border">
+    <div class="row m-3 p-3 gy-3 border shadow-lg">
+        <h2>{{ courses.name }}</h2>
+        <div class="col-12 border shadow-sm">
+            <div class="row p-3">
+                <div class="col-12 fs-3">
+                    About Course
+                </div>
+                <div class="col-12 fs-8 fw-light" style="text-align:justify;">
+                    {{ courses.description }}
+                </div>
+                <div class="col-10 col-sm-6 col-md-5 col-lg-3 m-2 p-2 border rounded bg-light shadow">
+                    Student Enrolled&nbsp;&nbsp;<span class="badge bg-success float-end">nahi</span>
+                </div>
+                <div class="col-10 col-sm-5 col-md-5 col-lg-3 m-2 p-2 border rounded bg-light shadow">
+                    Total Videos&nbsp;&nbsp;<span class="badge bg-success float-end">{{ courses.video_set.all|length }}</span>
+                </div>
+                <div class="col-10 col-sm-6 col-md-5 col-lg-3 m-2 p-2 border rounded bg-light shadow">
+                    Course Length&nbsp;&nbsp;<span class="badge bg-success float-end">{{ courses.length }} h</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 border shadow-sm">
+            <span class="fs-3 p-2">Attach Resources</span><br>
+            <!-- making a pdf downloadble for users or student  -->
+            {% if is_customer_course is False %}
+            <div class="col-10 col-sm-5 col-md-5 col-lg-3 m-2 p-2">
+                <a href="" download="" class="btn btn-sm btn-success">Download <i class="fas fa-external-link-alt"></i></a>
+            </div>
+            {% else %}
+            <div class="col-10 col-sm-5 col-md-5 col-lg-3 m-2 p-2">
+                <a href="{{ courses.related_file.url }}" download="{{ courses.related_file.url }}" class="btn btn-sm btn-success">Download <i class="fas fa-external-link-alt"></i></a>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-12 border shadow-sm">
+            <span class="fs-3 p-2">What will you learn ?</span>
+            <ol>
+                {% for learning in courses.learning_set.all %}
+                <li style="text-align:justify;">{{ learning.description }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+        <div class="col-12 border shadow-sm">
+            <span class="fs-3 p-2">Prerequisites</span>
+            <ol>
+                {% for prerequisite in courses.prerequisite_set.all %}
+                <li style="text-align:justify;">{{ prerequisite.description }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+</div>
+{% endblock %}

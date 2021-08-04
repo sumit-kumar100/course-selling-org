@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .card:hover {
+        box-shadow: 4px 8px 8px 4px lightgray;
+    }
+
+    form:hover {
+        box-shadow: 4px 8px 8px 4px lightgray;
+    }
+</style>
+{% load custom_filter %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>paytm</title>
+</head>
+
+<body>
+    <br><br>
+    <div class="container">
+        <div class="row gy-4">
+            <div class="col-6 m-auto col-md-5 col-lg-7">
+                <div class="card col-lg-5 m-auto">
+                    <img src="{{ course.image.url }}" class="img-fluid" alt="">
+                    <div class="card-title m-0 p-1 ps-3">
+                        <p class="fw-bold p-0 m-0 user-select-none">{{ course.name }}</p>
+                    </div>
+                    <div class="card-body  m-0 p-0 ps-3 pb-2">
+                        <p class="p-0 m-0 fw-normal text-danger user-select-none ">Save {{ course.discount }}%</p>
+                        <span class="p-0 m-0 fw-light user-select-none d-inline">{{ course.price|rupee }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-7 col-lg-5">
+                <form action="/order/" method="POST" class="form-group p-3 border rounded">
+                    <h1 class="text-center fw-light mb-5">Checkout</h1>
+                    {% csrf_token %}
+                    <div>
+                        <input type="text" class="form-control mb-4" name="first_name" placeholder="first-name"
+                            value="{{ details.first_name }}" required>
+                    </div>
+                    <div>
+                        <input type="text" class="form-control mb-4" name="last_name" placeholder="last-name"
+                            value="{{ details.last_name }}" required>
+                    </div>
+                    <div>
+                        <input type="email" class="form-control mb-4" name="mail" placeholder="email"
+                            value="{{ details.mail }}" required>
+                    </div>
+                    {% if messages %}
+                    {% for message in messages %}
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                    <div class="alert alert-danger p-2 text-center">
+                        {{ message }}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    {% endif %}
+                    <div>
+                        <input type="number" class="form-control mb-4" name="phone_number" {% if details.phone %}
+                            value="{{ details.phone }}" {% endif %} placeholder="Enter mobile number" required>
+                    </div>
+                    {% if messages %}
+                    {% for message in messages %}
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+                    <div class="alert alert-info p-2 text-center">
+                        {{ message }}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    {% endif %}
+                    <div>
+                        <input type="number" hidden value="{{ course.id }}" name="course_id" required>
+                    </div>
+                    <div>
+                        <input type="text" hidden value="{{ course.slug }}" name="course_slug" required>
+                    </div>
+                    <div class="mb-3">
+                        <p class="d-inline ps-2">Grand Total : </p>
+                        <del class="p-0 m-0 fw-light text-muted user-select-none d-inline">
+                            {{ course.price|rupee }}
+                        </del>
+                        &nbsp;
+                        <p class="user-select-none d-inline">{{ course.price|list_price:course.discount|rupee }}</p>
+                    </div>
+                    <div class="form-check ms-2">
+                        <input class="form-check-input " type="checkbox" required>
+                        <label class="form-check-label">
+                            I agree to the Terms and Conditions
+                        </label>
+                      </div>
+                    <div class="mt-5">
+                        <input type="submit" class="btn btn-dark text-white bg-gradient form-control mb-3 d-block"
+                            value='Continue to Pay'>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+{% endblock %}

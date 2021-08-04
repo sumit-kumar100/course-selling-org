@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .card:hover {
+        box-shadow: 4px 8px 8px 4px lightgray;
+    }
+</style>
+{% load custom_filter %}
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-8 order-1 order-sm-0 col-sm-5 col-lg-3 ">
+            <form action="/courses/" method="GET">
+                <div class="input-group">
+                    <select name="selected-course" class='form-select'>
+                        <option value="Select Courses">Select Courses</option>
+                        <option value="All Courses">All Courses</option>
+                        <option value="Free Courses">Free Courses</option>
+                        <option value="Paid Courses">Paid Courses</option>
+                    </select>
+                    <input type="submit" value="Go" class="btn btn-success">
+                </div>
+            </form>
+        </div>
+        <div class="col-12 order-0 mb-2 order-sm-1 col-sm-6 col-lg-4 ms-auto">
+            <div>
+                <form action="/all-courses/search/" method="GET" class="input-group">
+                    <input type="text" name="query" placeholder="search-courses" class="form-control">
+                    <input type="submit" value="search" class="btn btn-success text-white" class="form-control">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div class="container">
+    {% if messages %}
+    {% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+    <div class="alert alert-info p-2 text-center">
+        {{ message }}
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    <div class="row gy-4 gx-4">
+        {% if data %}
+        {% for course in data %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="card">
+                <img src="{{ course.image.url }}" class="img-fluid" alt="">
+                <div class="card-title m-0 p-1 ps-3">
+                    <p class="fw-bold p-0 m-0 user-select-none text-truncate">{{ course.name }}</p>
+                </div>
+                {% if course.price %}
+                    {% if course|is_customer_course:request.session.customer is True %}
+                    <div class="card-body  m-0 p-0 ps-3 pb-2">
+                        <br>
+                        <p class="p-0 m-0 fw-normal user-select-none">Enrolled <i class="text-success fas fa-check-circle"></i></p>
+                    </div>
+                    {% else %}
+                    <div class="card-body  m-0 p-0 ps-3 pb-2">
+                        <p class="p-0 m-0 fw-normal text-danger user-select-none ">Save {{ course.discount }}%</p>
+                        <del class="p-0 m-0 fw-light text-muted user-select-none d-inline">{{ course.price|rupee }}</del>
+                        &nbsp;
+                        <p class="user-select-none d-inline">{{ course.price|list_price:course.discount|rupee }}</p>
+                    </div>
+                    {% endif %}
+                {% else %}
+                <div class="card-body  m-0 p-0 ps-3 pb-2">
+                    <p class="p-0 m-0 fw-normal text-danger user-select-none ">Free Course</p>
+                </div>
+                <br>
+                {% endif %}
+                <div class="card-footer m-0 p-0">
+                    <div class="row g-0">
+                        {% if course|is_customer_course:request.session.customer is True %}
+                        <div class="col">
+                            <a href="/courses/{{ course.slug }}/"
+                                class="btn btn-dark d-block rounded-0  overflow-hidden">
+                                <small>Start course</small>
+                            </a>
+                        </div>
+                        {% else %}
+                        {% if course|is_free is True %}
+                        <div class="col">
+                            <a href="/courses/{{ course.slug }}/"
+                                class="btn btn-dark d-block rounded-0  overflow-hidden">
+                                <small>See more</small>
+                            </a>
+                        </div>
+                        {% else %}
+                        <div class="col">
+                            <a href="/checkout/{{ course.slug }}/"
+                                class="btn btn-dark d-block rounded-0  overflow-hidden">
+                                <small>Enroll now</small>
+                            </a>
+                        </div>
+                        <div class="col">
+                            <a href="/courses/{{ course.slug }}/"
+                                class="btn btn-dark d-block rounded-0  overflow-hidden">
+                                <small>See more</small>
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% elif query_courses %}
+        {% for course in query_courses %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="card">
+                <img src="{{ course.image.url }}" class="img-fluid" alt="">
+                <div class="card-title m-0 p-1 ps-3">
+                    <p class="fw-bold p-0 m-0 user-select-none text-truncate">{{ course.name }}</p>
+                </div>
+                {% if course.price %}
+                    {% if course|is_customer_course:request.session.customer is True %}
+                    <div class="card-body  m-0 p-0 ps-3 pb-2">
+                        <br>
+                        <p class="p-0 m-0 fw-normal user-select-none">Enrolled <i class="text-success fas fa-check-circle"></i></p>
+                    </div>
+                    {% else %}
+                    <div class="card-body  m-0 p-0 ps-3 pb-2">
+                        <p class="p-0 m-0 fw-normal text-danger user-select-none ">Save {{ course.discount }}%</p>
+                        <del class="p-0 m-0 fw-light text-muted user-select-none d-inline">{{ course.price|rupee }}</del>
+                        &nbsp;
+                        <p class="user-select-none d-inline">{{ course.price|list_price:course.discount|rupee }}</p>
+                    </div>
+                    {% endif %}
+                {% else %}
+                <div class="card-body  m-0 p-0 ps-3 pb-2">
+                    <p class="p-0 m-0 fw-normal text-danger user-select-none ">Free Course</p>
+                </div>
+                <br>
+                {% endif %}
+                <div class="card-footer m-0 p-0">
+                    <div class="row g-0">
+                        {% if course|is_customer_course:request.session.customer is True %}
+                        <div class="col">
+                            <a href="/courses/{{ course.slug }}/"
+                                class="btn btn-dark d-block rounded-0  overflow-hidden">
+                                <small>Start course</small>
+                            </a>
+                        </div>
+                        {% else %}
+                        {% if course|is_free is True %}
+                        <div class="col">
+                            <a href="/courses/{{ course.slug }}/"
+                                class="btn btn-dark d-block rounded-0  overflow-hidden">
+                                <small>See more</small>
+                            </a>
+                        </div>
+                        {% else %}
+                        <div class="col">
+                            <a href="/checkout/{{ course.slug }}/"
+                                class="btn btn-dark d-block rounded-0  overflow-hidden">
+                                <small>Enroll now</small>
+                            </a>
+                        </div>
+                        <div class="col">
+                            <a href="/courses/{{ course.slug }}/"
+                                class="btn btn-dark d-block rounded-0  overflow-hidden">
+                                <small>See more</small>
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% elif courses %}
+        {% for course in courses %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="card">
+                <img src="{{ course.image.url }}" class="img-fluid" alt="">
+                <div class="card-title m-0 p-1 ps-3">
+                    <p class="fw-bold p-0 m-0 user-select-none text-truncate">{{ course.name }}</p>
+                </div>
+                {% if course.price %}
+                    {% if course|is_customer_course:request.session.customer is True %}
+                    <div class="card-body  m-0 p-0 ps-3 pb-2">
+                        <br>
+                        <p class="p-0 m-0 fw-normal user-select-none">Enrolled <i class="text-success fas fa-check-circle"></i></p>
+                    </div>
+                    {% else %}
+                    <div class="card-body  m-0 p-0 ps-3 pb-2">
+                        <p class="p-0 m-0 fw-normal text-danger user-select-none ">Save {{ course.discount }}%</p>
+                        <del class="p-0 m-0 fw-light text-muted user-select-none d-inline">{{ course.price|rupee }}</del>
+                        &nbsp;
+                        <p class="user-select-none d-inline">{{ course.price|list_price:course.discount|rupee }}</p>
+                    </div>
+                    {% endif %}
+                {% else %}
+                <div class="card-body  m-0 p-0 ps-3 pb-2">
+                    <p class="p-0 m-0 fw-normal text-danger user-select-none ">Free Course</p>
+                </div>
+                <br>
+                {% endif %}
+                <div class="card-footer m-0 p-0">
+                    <div class="row g-0">
+                        {% if course|is_customer_course:request.session.customer is True %}
+                        <div class="col">
+                            <a href="/courses/{{ course.slug }}/"
+                                class="btn btn-dark d-block rounded-0  overflow-hidden">
+                                <small>Start course</small>
+                            </a>
+                        </div>
+                        {% else %}
+                        {% if course|is_free is True %}
+                        <div class="col">
+                            <a href="/courses/{{ course.slug }}/"
+                                class="btn btn-dark d-block rounded-0  overflow-hidden">
+                                <small>See more</small>
+                            </a>
+                        </div>
+                        {% else %}
+                        <div class="col">
+                            <a href="/checkout/{{ course.slug }}/"
+                                class="btn btn-dark d-block rounded-0  overflow-hidden">
+                                <small>Enroll now</small>
+                            </a>
+                        </div>
+                        <div class="col">
+                            <a href="/courses/{{ course.slug }}/"
+                                class="btn btn-dark d-block rounded-0  overflow-hidden">
+                                <small>See more</small>
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="col">
+            <h4 class="alert-success text-center p-4">No Result found</h4>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
