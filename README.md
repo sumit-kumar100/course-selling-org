@@ -1,4 +1,4 @@
-# Course_Website 
+# Course Selling Website
 
 <img src="static/css/Screenshot%202021-10-23%20at%2015-00-37%20classes%20on.png" width="500" height="250">
 
