@@ -18,4 +18,5 @@ This is a course selling website ( check this at "anjali1196.pythonanywhere.com"
 7. Admin password is admin
 8. Before running project create a virtual environment ( Recommended ).    # Optional
 9. Then run command pip install -r requirements.txt
-10. Enjoy!!
+
+# Enjoy 🥳🥳🥳🥳
