@@ -12,7 +12,7 @@ def index(requests):
 
 def mycourse(requests):
     customer = requests.session.get('customer') 
-    mycourse = CustomerCourse.objects.filter(customer=Customer(customer))
+    mycourse = CustomerCourse.objects.filter(customer=Customer(customer)) if customer else []
     return render(requests,'mycourse.html',{'mycourses':mycourse})
 
 
